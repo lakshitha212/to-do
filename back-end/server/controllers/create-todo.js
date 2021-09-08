@@ -13,7 +13,7 @@ export default function makePostTodo({ createTodo, getUserId }) {
             }
             const token = await httpRequest.headers['Authorization'].replace('Bearer ', '')
             const userId = await getUserId(token)
-            const response = await createTodo(todoName, userId)
+            const response = await createTodo(todoName, userId, token)
             return {
                 headers: {
                     'Content-Type': 'application/json',

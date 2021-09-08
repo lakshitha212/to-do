@@ -47,22 +47,7 @@ services:
       - app-network
     depends_on:
       - mongo
-
-  swagger:
-    build:
-      context: ./api-doc
-      dockerfile: ./Dockerfile
-    image: codfish/swagger
-    container_name: todo-apidoc
-    volumes:
-      - .:/home/swagger/app
-    environment:
-      VIRTUAL_HOST: todo-apidoc.docker
-    expose:
-      - "3003"
-    ports:
-      - "8083:3003"
-
+      
 networks:
   app-network:
     driver: bridge

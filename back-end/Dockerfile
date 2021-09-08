@@ -10,8 +10,6 @@ COPY package.json package-lock.json ./
 
 RUN npm install
 
-RUN npm install sharp
-
 EXPOSE 3002
 
 COPY . ./

@@ -1,19 +1,18 @@
 export default function makeCreateTodo({ backendDb }) {
-    return async function createTodo(todoName, userId) {
+    return async function createTodo(todoName, userId, token) {
         if (!todoName) {
             throw new Error("ToDo name is required!")
         }
         if (!userId) {
             throw new Error("UserId is required")
         }
-        // const response = await callRemoteAPI({
-        //     url: process.env.DEMO_API.concat('api/login'),
-        //     method: "POST",
-        //     json: { email, password },
-        // })
-        // if (!response.token) {
-        //     throw new Error(response.error)
-        // }
-        // return response
+
+        return await backendDb.insert({
+            todoName,
+            userId,
+            token,
+            status: 'TODO',
+            addedAt: Date.now()
+        })
     }
 }
