@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: ./Dockerfile
+    image: frontend:react
+    container_name: todo-frontend
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: todo-mongodb
+    env_file: .env
+    environment:
+      MONGO_INITDB_DATABASE: $MONGO_DB 
+    ports:
+      - "27017:27017"  
+    networks:
+      - app-network
+    
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: ./Dockerfile
+    image: backend:nodejs
+    container_name: todo-backend
+    env_file: .env
+    environment:
+      MONGO_USERNAME: $MONGO_USERNAME
+      MONGO_PASSWORD: $MONGO_PASSWORD
+      MONGO_HOSTNAME: mongo
+      MONGO_PORT: $MONGO_PORT
+      MONGO_DB: $MONGO_DB
+    expose:
+      - "3002"
+    ports:
+      - "8082:3002"
+    volumes:
+      - .:/home/node/app
+    networks:
+      - app-network
+    depends_on:
+      - mongo
+
+  swagger:
+    build:
+      context: ./api-doc
+      dockerfile: ./Dockerfile
+    image: codfish/swagger
+    container_name: todo-apidoc
+    volumes:
+      - .:/home/swagger/app
+    environment:
+      VIRTUAL_HOST: todo-apidoc.docker
+    expose:
+      - "3003"
+    ports:
+      - "8083:3003"
+
+networks:
+  app-network:
+    driver: bridge
+      
+volumes:
+  dbdata:
+  node_modules:
+    
