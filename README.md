@@ -1,3 +1,5 @@
+## Usage
+![Alt Text](./usage.gif)
 ## Installation
 with docker
 
