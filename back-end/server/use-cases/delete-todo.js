@@ -4,7 +4,7 @@ export default function makeDeleteTodo({ backendDb }) {
             throw new Error("ToDo ID is required!")
         }
 
-        return await backendDb.delete({
+        return await backendDb.remove({
             id: todoId
         })
     }
