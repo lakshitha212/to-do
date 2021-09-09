@@ -17,10 +17,17 @@ import CardActions from '@material-ui/core/CardActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CardContent from '@material-ui/core/CardContent';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import axios from 'axios';
 import auth from "../../protected/auth";
 import { BACKEND_URL } from '../../protected/constants'
 
+const customStyles = {
+	'TODO': { borderColor: 'rgba(0, 0, 0, 0.12)', backgroundColor: "#fff" },
+	'INPROGRESS': { borderColor: '#FF8C00', backgroundColor: "#FFA500" },
+	'DONE': { borderColor: '#90EE90', backgroundColor: "#98FB98" }
+}
 const styles = (theme) => ({
 	content: {
 		flexGrow: 1,
@@ -85,6 +92,11 @@ const styles = (theme) => ({
 		right: theme.spacing(1),
 		top: theme.spacing(1),
 		color: theme.palette.grey[500]
+	},
+	paper: {
+		padding: theme.spacing(2),
+		textAlign: 'center',
+		color: theme.palette.text.secondary,
 	}
 });
 
@@ -163,6 +175,19 @@ class Todo extends Component {
 			viewOpen: true
 		});
 	}
+
+	handleAlignment = (todoId, newAlignment) => {
+		auth.authentication(this.props.history)
+		if (newAlignment) {
+			const authToken = localStorage.getItem('AuthToken');
+			axios.defaults.headers.common = { Authorization: `${authToken}` };
+			axios({ url: `${BACKEND_URL}todo/${todoId}`, method: 'put', data: { todoInfo: { status: newAlignment } } }).then(() => {
+				this.fetchTodos()
+			}).catch((err) => {
+				console.log(err);
+			});
+		}
+	};
 
 	render() {
 		const DialogTitle = withStyles(styles)((props) => {
@@ -300,16 +325,31 @@ class Todo extends Component {
 					<Grid container spacing={2}>
 						{this.state.todos.map((todo) => (
 							<Grid key={todo._id} item xs={12} sm={6}>
-								<Card className={classes.root} variant="outlined">
+								<Card className={classes.root} style={customStyles[todo.status]} variant="outlined">
 									<CardContent>
-										<Typography variant="h5" component="h2">
+										<Typography variant="body1" component="div" style={{ whiteSpace: 'pre-wrap' }} >
 											{todo.todoName}
 										</Typography>
-										<Typography className={classes.pos} color="textSecondary">
-											{/* {dayjs(todo.createdAt).fromNow()} */}
-										</Typography>
-										<Typography variant="body2" component="p">
-											{/* {`${todo.body.substring(0, 65)}`} */}
+										<Typography variant="body1" component="div" style={{ whiteSpace: 'pre-wrap' }}>
+											<ToggleButtonGroup
+												style={{ float: 'right' }}
+												selected={todo.status}
+												value={todo.status}
+												exclusive
+												size="small"
+												onChange={(e, value) => this.handleAlignment(todo._id, value)}
+												aria-label="text alignment"
+											>
+												<ToggleButton value="TODO" aria-label="TODO">
+													TODO
+												</ToggleButton>
+												<ToggleButton value="INPROGRESS" aria-label="INPROGRESS">
+													INPROGRESS
+												</ToggleButton>
+												<ToggleButton value="DONE" aria-label="DONE">
+													DONE
+												</ToggleButton>
+											</ToggleButtonGroup>
 										</Typography>
 									</CardContent>
 									<CardActions>
