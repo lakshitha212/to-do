@@ -14,7 +14,7 @@ export default function makeBackendDB({ makeDb }) {
   async function findAll({ maximumNumberOfResults = Number.MAX_SAFE_INTEGER, query, limit = Number.MAX_SAFE_INTEGER, skip = 0, orderBy } = {}) {
     const db = await makeDb()
     const cursor = await db.collection(TODO_COLLECTION).find(query);
-    const paginated = cursor.sort({ 'addedAt':-1 }).skip(skip).limit(limit)
+    const paginated = cursor.sort({ 'addedAt': -1 }).skip(skip).limit(limit)
     const result = await paginated.toArray()
     return {
       count: await cursor.count(),
@@ -24,8 +24,17 @@ export default function makeBackendDB({ makeDb }) {
     }
   }
 
+  async function update({ id: _id, ...todoInfo }) {
+    const db = await makeDb()
+    const result = await db
+      .collection(TODO_COLLECTION)
+      .updateOne({ _id }, { $set: { ...todoInfo } })
+    return result.modifiedCount > 0 ? { id: _id, ...todoInfo } : null
+  }
+
   return Object.freeze({
     insert,
-    findAll
+    findAll,
+    update
   })
 }

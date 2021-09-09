@@ -3,7 +3,8 @@ import {
   createLogin,
   getUser,
   createTodo,
-  getTodos
+  getTodos,
+  updateTodo
 } from '../use-cases'
 
 import notFound from './not-found'
@@ -15,12 +16,14 @@ import makePostLogin from './login'
 import makeGetUser from './get-user'
 import makePostTodo from './create-todo'
 import makeGetTodos from './get-todos'
+import makePutTodo from './update-todo'
 
 
 const postLogin = makePostLogin({ createLogin })
 const readUser = makeGetUser({ getUser, getUserId })
 const postTodo = makePostTodo({ createTodo, getUserId })
 const allTodos = makeGetTodos({ getTodos, getUserId })
+const edtTodo = makePutTodo({ updateTodo, getUserId })
 
 
 const backendController = Object.freeze({
@@ -28,7 +31,8 @@ const backendController = Object.freeze({
   postLogin,
   readUser,
   postTodo,
-  allTodos
+  allTodos,
+  edtTodo
 })
 
 export default backendController
@@ -37,5 +41,6 @@ export {
   postLogin,
   readUser,
   postTodo,
-  allTodos
+  allTodos,
+  edtTodo
 }

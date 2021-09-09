@@ -3,6 +3,7 @@ import makeCreateLogin from './login'
 import makeGetUser from './get-user'
 import makeCreateTodo from './create-todo'
 import makeGetTodos from './get-todos'
+import makeUpdateTodo from './update-todo'
 
 // import other resources
 import backendDb from '../data-access'
@@ -13,12 +14,14 @@ const createLogin = makeCreateLogin({ callRemoteAPI })
 const getUser = makeGetUser({ callRemoteAPI })
 const createTodo = makeCreateTodo({ backendDb })
 const getTodos = makeGetTodos({ backendDb })
+const updateTodo = makeUpdateTodo({ backendDb })
 
 const backendService = Object.freeze({
     createLogin,
     getUser,
     createTodo,
-    getTodos
+    getTodos,
+    updateTodo
 })
 
 export default backendService
@@ -27,5 +30,6 @@ export {
     createLogin,
     getUser,
     createTodo,
-    getTodos
+    getTodos,
+    updateTodo
 }

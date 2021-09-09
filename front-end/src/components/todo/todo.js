@@ -199,7 +199,6 @@ class Todo extends Component {
 				this.setState({ errors: { todoName: "ToDo name is required" } })
 			} else {
 				this.setState({ errors: { todoName: "" } })
-				console.log(this.state.todoName)
 				const userTodo = {
 					todoName: this.state.todoName
 				};
@@ -208,7 +207,7 @@ class Todo extends Component {
 					options = {
 						url: `${BACKEND_URL}todo/${this.state.todoId}`,
 						method: 'put',
-						data: userTodo
+						data: { todoInfo: userTodo }
 					};
 				} else {
 					options = {
@@ -221,7 +220,7 @@ class Todo extends Component {
 				axios.defaults.headers.common = { Authorization: `${authToken}` };
 				axios(options).then(() => {
 					this.setState({ open: false });
-					window.location.reload();
+					this.fetchTodos()
 				}).catch((error) => {
 					this.setState({ open: true, errors: error.response.data });
 					console.log(error);
