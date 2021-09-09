@@ -15,7 +15,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import withStyles from '@material-ui/core/styles/withStyles';
 import NotesIcon from '@material-ui/icons/Notes';
-import Avatar from '@material-ui/core/avatar';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import auth from "../../protected/auth";
@@ -28,7 +27,8 @@ const styles = (theme) => ({
         display: 'flex'
     },
     appBar: {
-        zIndex: theme.zIndex.drawer + 1
+        zIndex: theme.zIndex.drawer + 1,
+        backgroundColor: '#00b7bd'
     },
     drawer: {
         width: drawerWidth,
@@ -54,7 +54,8 @@ const styles = (theme) => ({
         height: '31px',
         width: '31px',
         left: '45%',
-        top: '35%'
+        top: '35%',
+        color:'#00b7bd'
     },
     toolbar: theme.mixins.toolbar
 });
@@ -86,12 +87,11 @@ class TodoLayout extends Component {
         };
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
         auth.authentication(this.props.history)
         const authToken = localStorage.getItem('AuthToken');
         axios.defaults.headers.common = { Authorization: `${authToken}` };
         axios.get(`${BACKEND_URL}user`).then((response) => {
-            console.log(response.data.data);
             this.setState({
                 firstName: response.data.data.first_name,
                 lastName: response.data.data.last_name,
@@ -118,7 +118,7 @@ class TodoLayout extends Component {
                     <AppBar position="fixed" className={classes.appBar}>
                         <Toolbar>
                             <Typography variant="h6" noWrap>
-                                TodoApp
+                                TODO APP ASSIGNMENT - SURGE
                             </Typography>
                         </Toolbar>
                     </AppBar>
@@ -132,7 +132,7 @@ class TodoLayout extends Component {
                         <div className={classes.toolbar} />
                         <Divider />
                         <center>
-                            <Avatar src={this.state.profilePicture} className={classes.avatar} />
+                            <img alt="Avatar" src={this.state.profilePicture} className={classes.avatar}/>
                             <p>
                                 {' '}
                                 {this.state.firstName} {this.state.lastName}
@@ -140,7 +140,7 @@ class TodoLayout extends Component {
                         </center>
                         <Divider />
                         <List>
-                            <ListItem button key="Todo" onClick={this.loadTodoPage}>
+                            <ListItem button key="Todo" onClick={this.loadTodoPage} selected>
                                 <ListItemIcon>
                                     {' '}
                                     <NotesIcon />{' '}

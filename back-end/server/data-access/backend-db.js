@@ -11,7 +11,21 @@ export default function makeBackendDB({ makeDb }) {
     return { id, ...insertedInfo }
   }
 
+  async function findAll({ maximumNumberOfResults = Number.MAX_SAFE_INTEGER, query, limit = Number.MAX_SAFE_INTEGER, skip = 0, orderBy } = {}) {
+    const db = await makeDb()
+    const cursor = await db.collection(TODO_COLLECTION).find(query);
+    const paginated = cursor.sort({ 'addedAt':-1 }).skip(skip).limit(limit)
+    const result = await paginated.toArray()
+    return {
+      count: await cursor.count(),
+      limit,
+      skip,
+      result
+    }
+  }
+
   return Object.freeze({
-    insert
+    insert,
+    findAll
   })
 }

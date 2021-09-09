@@ -17,7 +17,6 @@ import CardActions from '@material-ui/core/CardActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CardContent from '@material-ui/core/CardContent';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
 import axios from 'axios';
 import auth from "../../protected/auth";
 import { BACKEND_URL } from '../../protected/constants'
@@ -28,7 +27,8 @@ const styles = (theme) => ({
 		padding: theme.spacing(3)
 	},
 	appBar: {
-		position: 'relative'
+		position: 'relative',
+		backgroundColor: '#00b7bd'
 	},
 	title: {
 		marginLeft: theme.spacing(2),
@@ -45,7 +45,8 @@ const styles = (theme) => ({
 	floatingButton: {
 		position: 'fixed',
 		bottom: 0,
-		right: 0
+		right: 0,
+		color: '#00b7bd'
 	},
 	form: {
 		width: '98%',
@@ -117,46 +118,40 @@ class Todo extends Component {
 		});
 	};
 
-	componentWillMount = () => {
+	fetchTodos = () => {
 		auth.authentication(this.props.history)
 		const authToken = localStorage.getItem('AuthToken');
 		axios.defaults.headers.common = { Authorization: `${authToken}` };
-		this.setState({
-			todos: [],
-			uiLoading: false
+		axios.get(`${BACKEND_URL}todos`).then((response) => {
+			this.setState({
+				todos: response.data.result,
+				uiLoading: false
+			});
+		}).catch((err) => {
+			console.log(err);
 		});
-		// axios
-		// 	.get('/todos')
-		// 	.then((response) => {
-		// 		this.setState({
-		// 			todos: response.data,
-		// 			uiLoading: false
-		// 		});
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(err);
-		// 	});
+	}
+
+	componentDidMount = () => {
+		this.fetchTodos()
 	};
 
 	deleteTodoHandler(data) {
 		auth.authentication(this.props.history)
 		const authToken = localStorage.getItem('AuthToken');
 		axios.defaults.headers.common = { Authorization: `${authToken}` };
-		let todoId = data.todo.todoId;
-		axios
-			.delete(`todo/${todoId}`)
-			.then(() => {
-				window.location.reload();
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		let todoId = data.todo._id;
+		axios.delete(`${BACKEND_URL}todo/${todoId}`).then(() => {
+			this.fetchTodos()
+		}).catch((err) => {
+			console.log(err);
+		});
 	}
 
 	handleEditClickOpen(data) {
 		this.setState({
 			todoName: data.todo.todoName,
-			todoId: data.todo.todoId,
+			todoId: data.todo._id,
 			buttonType: 'Edit',
 			open: true
 		});
@@ -184,12 +179,6 @@ class Todo extends Component {
 			);
 		});
 
-		const DialogContent = withStyles((theme) => ({
-			viewRoot: {
-				padding: theme.spacing(2)
-			}
-		}))(MuiDialogContent);
-
 		const { classes } = this.props;
 		const { open, errors, viewOpen } = this.state;
 
@@ -205,7 +194,7 @@ class Todo extends Component {
 		const handleSubmit = (event) => {
 			auth.authentication(this.props.history)
 			event.preventDefault();
-			
+
 			if (!this.state.todoName) {
 				this.setState({ errors: { todoName: "ToDo name is required" } })
 			} else {
@@ -217,26 +206,26 @@ class Todo extends Component {
 				let options = {};
 				if (this.state.buttonType === 'Edit') {
 					options = {
-						url: `/todo/${this.state.todoId}`,
+						url: `${BACKEND_URL}todo/${this.state.todoId}`,
 						method: 'put',
 						data: userTodo
 					};
 				} else {
 					options = {
-						url: '/todo',
+						url: `${BACKEND_URL}todo`,
 						method: 'post',
 						data: userTodo
 					};
 				}
 				const authToken = localStorage.getItem('AuthToken');
 				axios.defaults.headers.common = { Authorization: `${authToken}` };
-				// axios(options).then(() => {
-				// 	this.setState({ open: false });
-				// 	window.location.reload();
-				// }).catch((error) => {
-				// 	this.setState({ open: true, errors: error.response.data });
-				// 	console.log(error);
-				// });
+				axios(options).then(() => {
+					this.setState({ open: false });
+					window.location.reload();
+				}).catch((error) => {
+					this.setState({ open: true, errors: error.response.data });
+					console.log(error);
+				});
 			}
 		};
 
@@ -311,7 +300,7 @@ class Todo extends Component {
 
 					<Grid container spacing={2}>
 						{this.state.todos.map((todo) => (
-							<Grid item xs={12} sm={6}>
+							<Grid key={todo._id} item xs={12} sm={6}>
 								<Card className={classes.root} variant="outlined">
 									<CardContent>
 										<Typography variant="h5" component="h2">
