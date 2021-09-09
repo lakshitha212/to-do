@@ -26,7 +26,8 @@ import {
   readUser,
   postTodo,
   allTodos,
-  edtTodo
+  edtTodo,
+  removeTodo
 } from './controllers'
 import makeCallback from './express-callback'
 dotenv.config()
@@ -44,6 +45,7 @@ app.get('/user', makeCallback(readUser))
 app.post('/todo', makeCallback(postTodo))
 app.get('/todos', makeCallback(allTodos))
 app.put('/todo/:todoId', makeCallback(edtTodo))
+app.delete('/todo/:todoId', makeCallback(removeTodo))
 
 
 // catch 404 and forward to error handler

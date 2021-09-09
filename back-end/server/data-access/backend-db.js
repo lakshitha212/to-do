@@ -32,9 +32,16 @@ export default function makeBackendDB({ makeDb }) {
     return result.modifiedCount > 0 ? { id: _id, ...todoInfo } : null
   }
 
+  async function remove({ id: _id }) {
+    const db = await makeDb()
+    const result = await db.collection(TODO_COLLECTION).deleteOne({ _id })
+    return result.deletedCount
+  }
+
   return Object.freeze({
     insert,
     findAll,
-    update
+    update,
+    remove
   })
 }
