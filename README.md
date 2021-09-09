@@ -14,12 +14,16 @@ with docker
 
 - Exposed port 3000
  </br> URL : http://localhost:3000/
+ </br> Demo login credentials : Email-eve.holt@reqres.in  Password-cityslicka
+ </br> Read user credentials from https://reqres.in/
+ </br> Front-end language ReactJs
 
 ## Back End Service Info
 
 - Exposed port 8082
   </br> URL : http://localhost:8082/
-  </br> Used Clean Architecture of Uncle Bob
+  </br> Development language Nodejs (Used Clean Architecture of Uncle Bob)
+  </br> Datasource : MongoDB
 
 ## mongoDB Info
 

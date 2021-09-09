@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ProtectedRoute } from "./protected/route";
 import { default as LoginPage } from "./components/login";
 import { default as TodoLayout } from "./components/todo";
+import { default as NotFound } from "./components/notfound";
 
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
       <Switch>
         <Route exact path="/" component={LoginPage} />
         <ProtectedRoute exact path="/todo" component={TodoLayout} />
-        <Route path="*" component={() => "404 NOT FOUND"} />
+        <Route path="*" component={NotFound} />
       </Switch>
     </div>
   );
