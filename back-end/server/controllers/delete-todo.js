@@ -21,7 +21,7 @@ export default function makeRemoveTodo({ deleteTodo, getUserId }) {
                     'Last-Modified': new Date().toUTCString() // Use actual modified date of the entity
                 },
                 statusCode: 201,
-                body: response
+                body: { response }
             }
         } catch (e) {
             return {
