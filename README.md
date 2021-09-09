@@ -15,6 +15,7 @@ with docker
 - Exposed port 3000
  </br> URL : http://localhost:3000/
  </br> Demo login credentials : Email-eve.holt@reqres.in  Password-cityslicka
+ </br> Other accounts : george.bluth@reqres.in / janet.weaver@reqres.in / emma.wong@reqres.in / charles.morris@reqres.in / tracey.ramos@reqres.in
  </br> Read user credentials from https://reqres.in/
  </br> Front-end language ReactJs
 
